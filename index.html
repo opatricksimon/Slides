@@ -3,795 +3,2499 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constelação Familiar com Medicina do Cacau</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <meta name="description" content="Psicóloga Raquel Santos - Atendimento online para mulheres em crise de relacionamento. Acolhimento, sigilo e clareza emocional.">
+    <title>Psicóloga Raquel Santos | Atendimento Online para Mulheres</title>
+
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/nL7LFY1f/image.png">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/nL7LFY1f/image.png">
     
-    <!-- BIBLIOTECAS PARA PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     
     <style>
-        * {
+        /* ================================================
+           CSS VARIABLES & RESET
+        ================================================ */
+        :root {
+            /* Colors */
+            --green-dark: #3D5A4C;
+            --green-mid: #4A6B5D;
+            --green-light: #5E8370;
+            --green-pale: #8BA899;
+            --beige-dark: #D4C4B0;
+            --beige-mid: #E8DED0;
+            --beige-light: #F7F3EE;
+            --beige-white: #FDFCFA;
+            --text-dark: #2C3E35;
+            --text-mid: #4A5D53;
+            --text-light: #6B7D73;
+            --white: #FFFFFF;
+
+         /* ================================
+           REGULADOR DO HERO (posição vertical do conteúdo)
+           - Valores negativos sobem o conteúdo
+           - Valores positivos descem o conteúdo
+        ================================ */
+            --hero-content-shift-desktop: 150px;
+            --hero-content-shift-mobile: 150px;
+
+         /* não mexa (apenas “ponte” responsiva) */
+            --hero-content-shift: var(--hero-content-shift-desktop);
+
+            /* ================================
+   REGULADOR CTA DO HEADER
+   - AUMENTE o X para dar mais “espaço” nas laterais
+================================ */
+--header-cta-pad-y: 14px;  /* altura (topo/baixo) */
+--header-cta-pad-x: 44px;  /* laterais (esquerda/direita) */
+            
+            /* CTA Gradient */
+            --cta-dark: #3D5A4C;
+            --cta-mid: #4A6B5D;
+            --cta-light: #5E8370;
+            
+            /* Typography */
+            --font-serif: 'Cormorant Garamond', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, sans-serif;
+            
+            /* Spacing */
+            --section-padding: clamp(60px, 10vw, 120px);
+            --container-width: min(90%, 1200px);
+            
+            /* Dynamic scroll variable */
+            --scrollOpacity: 0;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
+        
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+        
         body {
-            background: #1a1a1a;
-            padding: 40px;
-            font-family: 'Montserrat', sans-serif;
+            font-family: var(--font-sans);
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--text-dark);
+            background-color: var(--beige-light);
+            overflow-x: hidden;
         }
-
-        .slide {
-            width: 960px;
-            height: 540px;
-            margin: 30px auto;
-            background: linear-gradient(135deg, #4A1C1C 0%, #2D0F0F 50%, #1F0A0A 100%);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 60px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
-
-        /* Overlay escuro - ELEMENTO REAL ao invés de ::before */
-        .slide-overlay {
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul, ol {
+            list-style: none;
+        }
+        
+        /* ================================================
+           PROGRESS BAR
+        ================================================ */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--cta-dark), var(--cta-mid), var(--cta-light), var(--cta-mid));
+            background-size: 200% 100%;
+            animation: shimmer 2s ease-in-out infinite;
+            z-index: 10001;
+            transition: width 0.1s ease-out;
+        }
+        
+        .progress-bar::after {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.25) 100%);
-            pointer-events: none;
-            z-index: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s ease-in-out infinite;
         }
-
-        /* Elementos decorativos de canto */
-        .corner-decoration {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            z-index: 1;
+        
+        @keyframes shimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
-
-        .corner-decoration.top-left {
-            top: 30px;
-            left: 30px;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .corner-decoration.top-right {
-            top: 30px;
-            right: 30px;
-            border-left: none;
-            border-bottom: none;
-        }
-
-        .corner-decoration.bottom-left {
-            bottom: 30px;
-            left: 30px;
-            border-right: none;
-            border-top: none;
-        }
-
-        .corner-decoration.bottom-right {
-            bottom: 30px;
-            right: 30px;
-            border-left: none;
-            border-top: none;
-        }
-
-        /* Diamante nos cantos - ELEMENTO REAL ao invés de ::after */
-        .corner-diamond {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: rgba(212, 175, 55, 0.4);
-            transform: rotate(45deg);
-        }
-
-        .corner-decoration.top-left .corner-diamond {
-            top: -4px;
-            left: -4px;
-        }
-
-        .corner-decoration.top-right .corner-diamond {
-            top: -4px;
-            right: -4px;
-        }
-
-        .corner-decoration.bottom-left .corner-diamond {
-            bottom: -4px;
-            left: -4px;
-        }
-
-        .corner-decoration.bottom-right .corner-diamond {
-            bottom: -4px;
-            right: -4px;
-        }
-
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-25deg);
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 90px;
-            font-weight: 300;
-            font-style: italic;
-            color: rgba(212, 175, 55, 0.04);
-            letter-spacing: 15px;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .glow-accent {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .glow-accent.top {
-            top: -100px;
-            right: -50px;
-        }
-
-        .glow-accent.bottom {
-            bottom: -100px;
-            left: -50px;
-        }
-
-        .gold-line {
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
-            margin: 20px 0;
-            position: relative;
-            z-index: 2;
-        }
-
-        .gold-line.long {
-            width: 200px;
-        }
-
-        .title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 44px;
-            font-weight: 400;
-            color: #D4AF37;
-            text-align: center;
-            letter-spacing: 3px;
-            line-height: 1.3;
-            position: relative;
-            z-index: 2;
-        }
-
-        .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 400;
-            color: rgba(212, 175, 55, 0.85);
-            text-align: center;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-top: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 38px;
-            font-weight: 400;
-            color: #D4AF37;
-            text-align: center;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
-            font-weight: 400;
-            color: rgba(212, 175, 55, 0.65);
-            text-align: center;
-            letter-spacing: 6px;
-            text-transform: uppercase;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .content-list {
-            list-style: none;
-            text-align: left;
-            max-width: 620px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .content-list li {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 17px;
-            font-weight: 400;
-            color: #FAF0E6;
-            margin: 20px 0;
-            padding-left: 30px;
-            position: relative;
-            line-height: 1.7;
-        }
-
-        /* Bullet point - ELEMENTO REAL */
-        .bullet {
-            position: absolute;
+        
+        /* ================================================
+           HEADER
+        ================================================ */
+        .header {
+            position: fixed;
+            top: 3px;
             left: 0;
-            top: 6px;
-            color: #D4AF37;
-            font-size: 9px;
+            right: 0;
+            z-index: 10000;
+            padding: 20px 0;
+            background: linear-gradient(180deg, rgba(61,90,76,0.9) 0%, rgba(61,90,76,0.3) 50%, transparent 100%);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
-
-        .content-list li strong {
-            color: #E8C547;
-            font-weight: 500;
+        
+        .header.scrolled {
+            padding: 12px 0;
+            background: rgba(253,252,250,0.92);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(74,107,93,0.1);
+            box-shadow: 0 4px 30px rgba(61,90,76,0.08);
         }
-
-        .content-list li em {
-            color: rgba(250, 240, 230, 0.8);
-            font-style: italic;
-        }
-
-        .quote {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
-            font-weight: 400;
-            font-style: italic;
-            color: #FAF0E6;
-            text-align: center;
-            max-width: 700px;
-            line-height: 1.7;
-            position: relative;
-            z-index: 2;
-        }
-
-        .quote-mark {
-            font-size: 60px;
-            color: rgba(212, 175, 55, 0.4);
-            font-family: 'Cormorant Garamond', serif;
-            line-height: 0;
-        }
-
-        .closing-text {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 34px;
-            font-weight: 400;
-            color: #D4AF37;
-            text-align: center;
-            line-height: 1.8;
-            position: relative;
-            z-index: 2;
-        }
-
-        .closing-text em {
-            color: #E8C547;
-        }
-
-        .author-name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 30px;
-            font-weight: 400;
-            font-style: italic;
-            color: #D4AF37;
-            text-align: center;
-            letter-spacing: 3px;
-            margin-top: 10px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .slide-number {
+        
+        .header.scrolled::after {
+            content: '';
             position: absolute;
-            bottom: 25px;
-            right: 40px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 14px;
-            color: rgba(212, 175, 55, 0.5);
-            letter-spacing: 2px;
-            z-index: 2;
-        }
-
-        .copyright {
-            position: absolute;
-            bottom: 14px;
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 9px;
-            font-weight: 400;
-            color: rgba(212, 175, 55, 0.45);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            white-space: nowrap;
-            z-index: 2;
+            width: 60%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(74,107,93,0.3), transparent);
         }
-
-        .decorative-element {
+        
+        .header-container {
+            width: var(--container-width);
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin: 25px 0;
-            position: relative;
-            z-index: 2;
+            justify-content: space-between;
         }
-
-        .decorative-element .dot {
-            width: 7px;
-            height: 7px;
-            background: #D4AF37;
-            transform: rotate(45deg);
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-
-        .decorative-element .line {
-            width: 60px;
-            height: 1px;
-            background: rgba(212, 175, 55, 0.5);
+        
+        .logo img {
+            height: 45px;
+            width: auto;
+            transition: transform 0.3s ease;
         }
-
-        .side-accent {
-            position: absolute;
-            width: 1px;
-            height: 80px;
-            background: linear-gradient(180deg, transparent, rgba(212, 175, 55, 0.2), transparent);
-            z-index: 1;
+        
+        .header.scrolled .logo img {
+            height: 38px;
         }
-
-        .side-accent.left {
-            left: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .side-accent.right {
-            right: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .slide-label {
-            position: absolute;
-            top: -25px;
-            left: 0;
-            font-size: 12px;
-            color: #666;
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        .slide-wrapper {
-            position: relative;
-        }
-
-        /* BOTÃO EXPORTAR */
-        .export-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            background: linear-gradient(135deg, #D4AF37 0%, #C5A028 100%);
-            color: #1F0A0A;
-            border: none;
-            padding: 16px 32px;
-            font-family: 'Montserrat', sans-serif;
+        
+        .logo-text {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
             font-weight: 600;
-            border-radius: 6px;
+            color: var(--white);
+            transition: color 0.35s ease;
+        }
+        
+        .header.scrolled .logo-text {
+            color: var(--green-dark);
+        }
+        
+        .nav-desktop {
+            display: none;
+        }
+        
+        @media (min-width: 900px) {
+            .nav-desktop {
+                display: flex;
+                align-items: center;
+                gap: 32px;
+            }
+        }
+        
+        .nav-desktop a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--white);
+            position: relative;
+            padding: 4px 0;
+            transition: color 0.3s ease;
+        }
+        
+        .header.scrolled .nav-desktop a:not(.btn) {
+         color: var(--text-mid);
+        }
+        
+        .nav-desktop a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--green-mid);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-desktop a:hover::after {
+            width: 100%;
+        }
+        
+        .header.scrolled .nav-desktop a:not(.btn):hover {
+            color: var(--green-dark);
+        }
+        
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: none;
             cursor: pointer;
-            box-shadow: 0 6px 25px rgba(212, 175, 55, 0.5);
-            font-size: 14px;
-            letter-spacing: 1px;
+            gap: 6px;
+            z-index: 10002;
+        }
+        
+        @media (min-width: 900px) {
+            .menu-toggle {
+                display: none;
+            }
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--white);
+            border-radius: 2px;
             transition: all 0.3s ease;
         }
-
-        .export-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        
+        .header.scrolled .menu-toggle span {
+            background: var(--green-dark);
         }
-
-        .export-btn:disabled {
-            opacity: 0.7;
-            cursor: wait;
+        
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
         }
-
-        /* BARRA DE PROGRESSO */
-        .progress-container {
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        
+        /* Mobile Menu */
+        .nav-mobile {
             position: fixed;
-            top: 80px;
-            right: 20px;
-            z-index: 9999;
-            background: rgba(0,0,0,0.9);
-            padding: 15px 20px;
-            border-radius: 8px;
-            display: none;
-            min-width: 220px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .progress-text {
-            color: #D4AF37;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-
-        .progress-bar {
+            top: 0;
+            right: -100%;
             width: 100%;
-            height: 8px;
-            background: rgba(212, 175, 55, 0.2);
-            border-radius: 4px;
+            max-width: 320px;
+            height: 100vh;
+            background: var(--beige-white);
+            padding: 100px 40px 40px;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10001;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+        }
+        
+        .nav-mobile.active {
+            right: 0;
+        }
+        
+        .nav-mobile a {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--beige-mid);
+            transition: color 0.3s ease, padding-left 0.3s ease;
+        }
+        
+        .nav-mobile a:hover {
+            color: var(--green-mid);
+            padding-left: 10px;
+        }
+        
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44,62,53,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 10000;
+        }
+        
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* ================================================
+           BUTTONS
+        ================================================ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border-radius: 999px;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            border: none;
+            overflow: hidden;
+            isolation: isolate;
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--cta-dark), var(--cta-mid), var(--cta-light));
+            background-size: 200% 200%;
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 15px rgba(61,90,76,0.3), 0 1px 3px rgba(61,90,76,0.2);
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transform: skewX(-15deg);
+            transition: left 0.6s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(61,90,76,0.4), 0 4px 10px rgba(61,90,76,0.2);
+            background-position: 100% 100%;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(61,90,76,0.3);
+        }
+        
+        .btn-primary:focus-visible {
+            outline: 3px solid var(--green-pale);
+            outline-offset: 3px;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--green-dark);
+            border: 2px solid var(--green-mid);
+        }
+
+/* CTA do header: mais espaço nas laterais */
+.btn-cta-header {
+  padding-top: 14px;
+  padding-bottom: 14px;
+  padding-left: 15px !important;
+    /* ← espaço lateral esquerdo */
+  padding-right: 15px !important;
+  /* ← espaço lateral direito */
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Quando o header fica branco (scrolled) */
+.header.scrolled .btn-cta-header {
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
+        .btn-outline:hover {
+            background: var(--green-dark);
+            color: var(--white);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(61,90,76,0.3);
+        }
+        
+        .btn-outline:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-animated {
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .btn-animated:hover {
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(61,90,76,0.3);
+            }
+            50% { 
+                transform: scale(1.02);
+                box-shadow: 0 6px 25px rgba(61,90,76,0.4);
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .btn, .btn::before, .progress-bar, .progress-bar::after {
+                animation: none;
+                transition: none;
+            }
+        }
+        
+        /* WhatsApp Icon */
+        .btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+        
+        /* ================================================
+           HERO SECTION
+        ================================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             overflow: hidden;
         }
-
-        .progress-fill {
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #D4AF37, #E8C547);
-            width: 0%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
+            z-index: 0;
         }
+        
+        .hero-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(61,90,76,0.7) 0%,
+                rgba(61,90,76,calc(0.5 + var(--scrollOpacity))) 40%,
+                rgba(44,62,53,calc(0.75 + var(--scrollOpacity))) 100%
+            );
+            z-index: 1;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: var(--container-width);
+            max-width: 800px;
+            text-align: center;
+            padding: 120px 0 80px;
+            transform: translateY(var(--hero-content-shift));
+        }
+
+        @media (max-width: 700px) {
+          :root {
+            --hero-content-shift: var(--hero-content-shift-mobile);
+          }
+         }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--white);
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .hero-badge span {
+            width: 6px;
+            height: 6px;
+            background: var(--beige-mid);
+            border-radius: 50%;
+        }
+        
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2.2rem, 6vw, 3.8rem);
+            font-weight: 600;
+            line-height: 1.15;
+            color: var(--white);
+            margin-bottom: 20px;
+            text-shadow: 0 2px 30px rgba(0,0,0,0.2);
+        }
+        
+        .hero h1 em {
+            font-style: italic;
+            color: var(--beige-mid);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.7;
+        }
+        
+        .hero-cta {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        @media (min-width: 500px) {
+            .hero-cta {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+        
+        .hero-micro {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .hero-micro span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .hero-micro svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--beige-mid);
+        }
+        
+        /* ================================================
+           REVEAL ANIMATIONS
+        ================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+        
+        /* ================================================
+           SECTION BASE
+        ================================================ */
+        .section {
+            padding: var(--section-padding) 0;
+        }
+        
+        .section-container {
+            width: var(--container-width);
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+        
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--green-mid);
+            margin-bottom: 12px;
+        }
+        
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+        
+        .section-subtitle {
+            font-size: 1.05rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+        
+        /* ================================================
+           VOCÊ SE IDENTIFICA? (DORES)
+        ================================================ */
+        .dores {
+            background: var(--beige-white);
+        }
+        
+        .dores-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(2, 1fr); /* PC: 2 colunas (3 linhas com 6 itens) */
+}
+
+/* “mobile” com 3 colunas (fica 3 em cima / 3 embaixo) */
+@media (max-width: 700px) {
+  .dores-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  /* cards mais compactos pra caber 3 colunas */
+  .dor-card { padding: 18px 14px; }
+  .dor-icon { width: 42px; height: 42px; margin-bottom: 14px; }
+  .dor-card h3 { font-size: 1.05rem; }
+  .dor-card p { font-size: 0.88rem; line-height: 1.45; }
+}
+
+/* fallback pra telas MUITO estreitas (320px): 2 colunas, pra não esmagar */
+@media (max-width: 420px) {
+  .dores-grid { grid-template-columns: repeat(2, 1fr); }
+}
+        
+        .dor-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 32px 28px;
+            border: 1px solid var(--beige-mid);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 0;
+            background: linear-gradient(180deg, var(--green-mid), var(--green-light));
+            transition: height 0.4s ease;
+        }
+        
+        .dor-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(61,90,76,0.12);
+            border-color: var(--green-pale);
+        }
+        
+        .dor-card:hover::before {
+            height: 100%;
+        }
+        
+        .dor-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--beige-light), var(--beige-mid));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .dor-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--green-dark);
+            fill: none;
+            stroke-width: 1.5;
+        }
+        
+        .dor-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .dor-card p {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+        
+        /* ================================================
+           COMO TE AJUDO (BENEFÍCIOS)
+        ================================================ */
+        .beneficios {
+            background: linear-gradient(180deg, rgba(177, 218, 197, 0.882) 0%, var(--beige-white) 70%);
+        }
+        
+        .beneficios-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        
+        @media (min-width: 900px) {
+            .beneficios-wrapper {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        .beneficios-image {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        
+        .beneficios-image img {
+             width: 100%;
+             aspect-ratio: 3/4;        /* retrato */
+             object-fit: cover;
+             object-position: center top; /* favorece rosto */
+             border-radius: 24px;
+        }
+
+        .beneficios-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            border: 1px solid rgba(74,107,93,0.2);
+        }
+        
+        .beneficios-list {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .beneficio-item {
+            display: flex;
+            gap: 20px;
+            padding: 24px;
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--beige-mid);
+            transition: all 0.3s ease;
+        }
+        
+        .beneficio-item:hover {
+            border-color: var(--green-pale);
+            box-shadow: 0 10px 30px rgba(61,90,76,0.08);
+        }
+        
+        .beneficio-num {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+        
+        .beneficio-content h3 {
+            font-family: var(--font-serif);
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+        
+        .beneficio-content p {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+        
+        /* ================================================
+           SOBRE
+        ================================================ */
+        .sobre {
+            background: var(--green-dark);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sobre::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 60%;
+            height: 150%;
+            background: radial-gradient(ellipse, rgba(94,131,112,0.3) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .sobre-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (min-width: 900px) {
+            .sobre-wrapper {
+                grid-template-columns: 1fr 1.2fr;
+            }
+        }
+        
+        .sobre-image {
+            position: relative;
+        }
+        
+        .sobre-image img {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            aspect-ratio: 3/4;
+            object-fit: cover;
+            object-position: top;
+            border-radius: 24px;
+            border: 3px solid rgba(255,255,255,0.15);
+        }
+        
+        .sobre-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .sobre-badge span {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        
+        .sobre-badge strong {
+            font-size: 1rem;
+            color: var(--green-dark);
+        }
+        
+        .sobre-content .section-label {
+            color: var(--beige-mid);
+        }
+        
+        .sobre-content .section-title {
+            color: var(--white);
+        }
+        
+        .sobre-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 24px;
+        }
+        
+        .sobre-abordagem {
+            background: rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 24px;
+            border-left: 4px solid var(--beige-mid);
+        }
+        
+        .sobre-abordagem h4 {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            color: var(--beige-mid);
+            margin-bottom: 10px;
+        }
+        
+        .sobre-abordagem p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.7;
+        }
+        
+        /* ================================================
+           COMO FUNCIONA
+        ================================================ */
+        .como-funciona {
+            background: var(--beige-white);
+        }
+        
+        .passos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .passo {
+            text-align: center;
+            padding: 40px 30px;
+            background: var(--white);
+            border-radius: 24px;
+            border: 1px solid var(--beige-mid);
+            position: relative;
+            transition: all 0.4s ease;
+        }
+        
+        .passo:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(61,90,76,0.1);
+        }
+        
+        .passo-num {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            box-shadow: 0 8px 20px rgba(61,90,76,0.3);
+        }
+        
+        .passo-icon {
+            width: 70px;
+            height: 70px;
+            margin: 20px auto 20px;
+            background: linear-gradient(135deg, var(--beige-light), var(--beige-mid));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .passo-icon svg {
+            width: 32px;
+            height: 32px;
+            stroke: var(--green-dark);
+            fill: none;
+            stroke-width: 1.5;
+        }
+        
+        .passo h3 {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+        
+        .passo p {
+            font-size: 0.95rem;
+            color: var(--text-mid);
+            line-height: 1.6;
+        }
+        
+        /* ================================================
+           DEPOIMENTOS
+        ================================================ */
+        .depoimentos {
+            background: linear-gradient(180deg, var(--beige-light) 0%, var(--beige-white) 100%);
+            overflow: hidden;
+        }
+        
+        .depoimentos-carousel {
+            display: flex;
+            gap: 24px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 20px 5%;
+            animation: autoScroll 30s linear infinite;
+        }
+        
+        .depoimentos-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .depoimentos-carousel:hover {
+            animation-play-state: paused;
+        }
+        
+        @keyframes autoScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .depoimento-card {
+            flex-shrink: 0;
+            width: 300px;
+            scroll-snap-align: start;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--beige-mid);
+            transition: all 0.3s ease;
+        }
+        
+        .depoimento-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(61,90,76,0.12);
+        }
+        
+        .depoimento-card img {
+            width: 100%;
+            height: auto;
+        }
+        
+        /* ================================================
+           VÍDEOS INSTAGRAM
+        ================================================ */
+        .videos {
+             background: linear-gradient(180deg, var(--beige-white) 0%, rgba(1, 70, 34, 0.955) 100%);
+        }
+        
+        .videos-grid {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            padding: 10px 0;
+        }
+        
+        .videos-grid::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .video-item {
+            flex-shrink: 0;
+            width: 280px;
+            scroll-snap-align: start;
+            border-radius: 20px;
+            overflow: hidden;
+            background: var(--white);
+            border: 1px solid var(--beige-mid);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+        
+        @media (min-width: 900px) {
+            .videos-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                overflow: visible;
+            }
+            
+            .video-item {
+                width: 100%;
+            }
+        }
+        
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 177.78%;
+            height: 0;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .videos-cta {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .btn-instagram {
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: var(--white);
+            border: none;
+            box-shadow: 0 4px 15px rgba(220,39,67,0.3);
+        }
+        
+        .btn-instagram:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(220,39,67,0.4);
+        }
+        
+        .btn-instagram svg {
+            width: 22px;
+            height: 22px;
+        }
+        
+        /* ================================================
+           FAQ
+        ================================================ */
+        .faq {
+            background: var(--beige-light);
+        }
+        
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .faq-item {
+            background: var(--white);
+            border-radius: 16px;
+            border: 1px solid var(--beige-mid);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: var(--green-pale);
+        }
+        
+        .faq-item.active {
+            border-color: var(--green-mid);
+            box-shadow: 0 10px 30px rgba(61,90,76,0.08);
+        }
+        
+        .faq-question {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            cursor: pointer;
+            gap: 20px;
+        }
+        
+        .faq-question h3 {
+            font-family: var(--font-sans);
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+        }
+        
+        .faq-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            background: var(--beige-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon {
+            background: var(--green-mid);
+            transform: rotate(180deg);
+        }
+        
+        .faq-icon svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--green-dark);
+            fill: none;
+            stroke-width: 2;
+            transition: stroke 0.3s ease;
+        }
+        
+        .faq-item.active .faq-icon svg {
+            stroke: var(--white);
+        }
+        
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .faq-answer-inner {
+            padding: 0 28px 24px;
+            font-size: 0.98rem;
+            color: var(--text-mid);
+            line-height: 1.7;
+        }
+        
+        /* ================================================
+           CTA FINAL
+        ================================================ */
+        .cta-final {
+            background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-mid) 50%, var(--green-light) 100%);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-final::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+        }
+        
+        .cta-final .section-container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .cta-final .section-title {
+            color: var(--white);
+            margin-bottom: 16px;
+        }
+        
+        .cta-final .section-subtitle {
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 32px;
+        }
+        
+        .cta-final .btn-primary {
+            background: var(--white);
+            color: var(--green-dark);
+            font-size: 1.05rem;
+            padding: 18px 40px;
+        }
+        
+        .cta-final .btn-primary:hover {
+            background: var(--beige-light);
+        }
+        
+        /* ================================================
+           FOOTER
+        ================================================ */
+        .footer {
+            background: var(--text-dark);
+            color: rgba(255,255,255,0.7);
+            padding: 50px 0 30px;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            text-align: center;
+        }
+        
+        .footer-logo img {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+            opacity: 0.9;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .footer-social a {
+            width: 44px;
+            height: 44px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            background: var(--green-mid);
+            transform: translateY(-3px);
+        }
+        
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--white);
+        }
+        
+        .footer-info {
+            font-size: 0.9rem;
+        }
+        
+        .footer-info p {
+            margin-bottom: 4px;
+        }
+        
+        .footer-credit {
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.85rem;
+        }
+        
+        .footer-credit a {
+            color: var(--beige-mid);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-credit a:hover {
+            color: var(--white);
+        }
+        
+        /* ================================================
+           WHATSAPP FLUTUANTE
+        ================================================ */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .whatsapp-float.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+        }
+        
+        .whatsapp-float a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            box-shadow: 0 6px 20px rgba(37,211,102,0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-float a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(37,211,102,0.5);
+        }
+        
+        .whatsapp-float svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--white);
+        }
+        
+        /* Pulse animation */
+        .whatsapp-float::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: whatsappPulse 2s infinite;
+            z-index: -1;
+        }
+        
+        @keyframes whatsappPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+        
+        /* ================================================
+           CALENDLY POPUP STYLES
+        ================================================ */
+        .calendly-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44,62,53,0.9);
+            z-index: 100000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .calendly-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .calendly-popup {
+            background: var(--white);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            max-height: 700px;
+            overflow: hidden;
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        
+        .calendly-overlay.active .calendly-popup {
+            transform: scale(1) translateY(0);
+        }
+        
+        .calendly-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 40px;
+            height: 40px;
+            background: var(--beige-light);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+        
+        .calendly-close:hover {
+            background: var(--green-mid);
+        }
+        
+        .calendly-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-dark);
+            transition: stroke 0.3s ease;
+        }
+        
+        .calendly-close:hover svg {
+            stroke: var(--white);
+        }
+        
+        .calendly-popup iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* ================================================
+          TEXTO METÁLICO (destaque elegante)
+          Use em palavras dentro de títulos / frases-chave
+        ================================================ */
+       .metallic-highlight {
+         font-style: italic;
+         background: linear-gradient(
+           90deg,
+           rgba(232,222,208,0.85) 0%,
+           rgba(255,255,255,0.95) 25%,
+           rgba(232,222,208,0.85) 50%,
+           rgba(255,255,255,0.95) 75%,
+           rgba(232,222,208,0.85) 100%
+         );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  animation: metallicShine 3.2s linear infinite;
+  filter: drop-shadow(0 2px 10px rgba(0,0,0,0.25));
+}
+
+@keyframes metallicShine {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .metallic-highlight { animation: none; }
+}
+
+/* ================================================
+   BOTÕES PRIMÁRIOS - BRILHO INTERNO + TEXTO METÁLICO
+================================================ */
+
+/* Borda interna sutil que dá "corpo" ao botão */
+.btn-primary {
+  box-shadow: 
+    0 4px 15px rgba(61,90,76,0.3),
+    0 1px 3px rgba(61,90,76,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+/* Shimmer constante que passa DENTRO do botão */
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.3),
+    transparent
+  );
+  animation: btnShineLoop 2.5s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+@keyframes btnShineLoop {
+  0% { left: -100%; }
+  50%, 100% { left: 200%; }
+}
+
+/* Texto e ícone ficam acima do shimmer */
+.btn-primary span,
+.btn-primary svg {
+  position: relative;
+  z-index: 2;
+}
+
+/* Pausa o shimmer quando passa o mouse (pra não conflitar) */
+.btn-primary:hover::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary::after { animation: none; }
+}
+
+/* ================================================
+   BOTÃO OUTLINE - FUNDO BEGE + SHIMMER
+   (botão "Agendar Consulta" no Hero)
+================================================ */
+.btn-outline {
+  background: var(--beige-light);
+  color: var(--green-dark);
+  border: 2px solid var(--green-mid);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 
+    0 2px 8px rgba(61,90,76,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.6),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
+}
+
+/* Shimmer passando dentro */
+.btn-outline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.5),
+    transparent
+  );
+  animation: btnShineLoop 4s ease-in-out infinite;
+  animation-delay: 1.5s; /* começa defasado do btn-primary */
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.btn-outline:hover {
+  background: var(--green-dark);
+  color: var(--white);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(61,90,76,0.3);
+}
+
+.btn-outline:hover::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+/* ================================================
+   BOTÃO INSTAGRAM - SHIMMER TAMBÉM
+================================================ */
+.btn-instagram {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.btn-instagram::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+  animation: btnShineLoop 3.8s ease-in-out infinite;
+  animation-delay: 0.8s;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.btn-instagram:hover::after {
+  animation-play-state: paused;
+  opacity: 0;
+}
+
+/* ================================================
+   CTA FINAL - SHIMMER NO BOTÃO BRANCO
+================================================ */
+.cta-final .btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-final .btn-primary::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(61,90,76,0.15),
+    transparent
+  );
+  animation: btnShineLoop 3.5s ease-in-out infinite;
+}
+
+/* ================================================
+   CTA DE SEÇÃO (centralizado)
+================================================ */
+.section-cta {
+  width: 100% !important;
+  text-align: center !important;
+  margin-top: 50px !important;
+}
+
+.section-cta .btn {
+  display: inline-flex !important;
+  margin: 0 auto !important;
+}
     </style>
 </head>
 <body>
-
-    <!-- BOTÃO EXPORTAR PDF -->
-    <button class="export-btn" onclick="exportarPDF()">
-        📄 EXPORTAR PDF
-    </button>
-
-    <!-- BARRA DE PROGRESSO -->
-    <div class="progress-container" id="progressContainer">
-        <div class="progress-text" id="progressText">Preparando...</div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-        </div>
-    </div>
-
-    <!-- SLIDE 1 - CAPA -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 1 - Capa</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <span class="watermark">Carol Costa</span>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <img src="https://i.postimg.cc/pr6NnrfY/1767816425691-019b9a11-3f17-7695-a21e-54a9004f6d24-removebg-preview.png" alt="Raquel Santos Psicóloga" loading="eager">
+            </a>
             
-            <div class="decorative-element">
-                <span class="line"></span>
-                <span class="dot"></span>
-                <span class="line"></span>
+            <nav class="nav-desktop">
+                <a href="#sobre">Sobre</a>
+                <a href="#como-funciona">Como Funciona</a>
+                <a href="#depoimentos">Depoimentos</a>
+                <a href="#faq">Dúvidas</a>
+                <a href="#" class="btn btn-primary btn-cta-header" data-calendly>Agendar Consulta</a>
+            </nav>
+            
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <nav class="nav-mobile" id="navMobile">
+            <a href="#sobre">Sobre</a>
+            <a href="#como-funciona">Como Funciona</a>
+            <a href="#depoimentos">Depoimentos</a>
+            <a href="#faq">Dúvidas</a>
+            <a href="#" data-calendly style="color: var(--green-mid); font-weight: 600;">Agendar Consulta</a>
+        </nav>
+        <div class="nav-overlay" id="navOverlay"></div>
+    </header>
+    
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <img src="https://i.postimg.cc/Y0xGpfMr/1767816268628-019b9a0f-3cad-74c5-903e-efcc6b3ea3e2.png" alt="Psicóloga Raquel Santos" loading="eager">
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-badge reveal">
+                <span></span> Atendimento Online <span></span> Acolhimento <span></span> Sigilo
             </div>
-            
-            <h1 class="title">Constelação Familiar<br>com a Medicina do Cacau</h1>
-            
-            <div class="gold-line long"></div>
-            
-            <p class="subtitle">Preparação para o Atendimento</p>
-            
-            <div class="decorative-element">
-                <span class="line"></span>
-                <span class="dot"></span>
-                <span class="line"></span>
+            <h1 class="reveal reveal-delay-1">
+              Você não precisa<br class="hero-break">
+  <em class="metallic-highlight">dar conta de tudo sozinha</em></h1>
+            <p class="hero-subtitle reveal reveal-delay-2">Psicoterapia online para mulheres que estão cansadas de se anular, se cobrar demais e carregar o peso de relações que não funcionam.</p>
+            <div class="hero-cta reveal reveal-delay-3">
+                <a href="https://wa.me/5511920677866?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20atendimento%20psicol%C3%B3gico." class="btn btn-primary btn-animated" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Conversar no WhatsApp
+                </a>
+                <a href="#" class="btn btn-outline" data-calendly>
+                    Agendar Consulta
+                </a>
             </div>
-
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 2 - ANTES DO ATENDIMENTO -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 2 - Antes do Atendimento</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <div class="side-accent left"></div>
-            <div class="side-accent right"></div>
-            <span class="watermark">Carol Costa</span>
-            
-            <h2 class="section-title">Antes do Atendimento</h2>
-            <p class="section-subtitle">Alimentação e Cuidados</p>
-            
-            <ul class="content-list">
-                <li><span class="bullet">◆</span>Jejum mínimo de <strong>3 horas</strong></li>
-                <li><span class="bullet">◆</span><strong>Sem álcool</strong> nas 24 horas anteriores</li>
-                <li><span class="bullet">◆</span>Evitar excesso de <strong>cafeína</strong> no dia</li>
-                <li><span class="bullet">◆</span>Refeição leve antes do jejum — <em>comida de verdade, nada pesado ou industrializado</em></li>
-            </ul>
-            
-            <span class="slide-number">01</span>
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 3 - SONO E DESCANSO -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 3 - Sono e Descanso</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <div class="side-accent left"></div>
-            <div class="side-accent right"></div>
-            <span class="watermark">Carol Costa</span>
-            
-            <h2 class="section-title">Sono e Descanso</h2>
-            <p class="section-subtitle">Prepare seu corpo para a vivência</p>
-            
-            <ul class="content-list">
-                <li><span class="bullet">◆</span>Priorize uma <strong>boa noite de sono</strong></li>
-                <li><span class="bullet">◆</span>Chá de <strong>camomila</strong> antes de dormir para acalmar o sistema nervoso</li>
-                <li><span class="bullet">◆</span>Evite <strong>telas, discussões</strong> ou estímulos intensos na noite anterior</li>
-            </ul>
-            
-            <span class="slide-number">02</span>
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 4 - CORPO E MENTE -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 4 - Corpo e Mente</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <div class="side-accent left"></div>
-            <div class="side-accent right"></div>
-            <span class="watermark">Carol Costa</span>
-            
-            <h2 class="section-title">Corpo e Mente</h2>
-            <p class="section-subtitle">No dia do atendimento</p>
-            
-            <ul class="content-list">
-                <li><span class="bullet">◆</span>Venha com roupas <strong>confortáveis</strong></li>
-                <li><span class="bullet">◆</span><strong>Hidrate-se</strong> bem ao longo do dia</li>
-                <li><span class="bullet">◆</span>Chegue <strong>alguns minutos antes</strong> para desacelerar</li>
-                <li><span class="bullet">◆</span>Traga <strong>papel e caneta</strong> se desejar anotar após a vivência</li>
-            </ul>
-            
-            <span class="slide-number">03</span>
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 5 - POSTURA INTERNA -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 5 - Postura Interna</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <div class="side-accent left"></div>
-            <div class="side-accent right"></div>
-            <span class="watermark">Carol Costa</span>
-            
-            <h2 class="section-title">Postura Interna</h2>
-            <p class="section-subtitle">Como se preparar emocionalmente</p>
-            
-            <ul class="content-list">
-                <li><span class="bullet">◆</span>Venha com <strong>abertura</strong>, sem expectativas rígidas</li>
-                <li><span class="bullet">◆</span><strong>Confiança</strong> no processo e respeito aos seus próprios limites</li>
-            </ul>
-            
-            <div class="gold-line" style="margin: 30px 0;"></div>
-            
-            <p class="quote">
-                <span class="quote-mark">"</span><br>
-                Não é sobre entender tudo com a mente, é sobre permitir que o corpo e o campo mostrem o que precisa ser visto.
-            </p>
-            
-            <span class="slide-number">04</span>
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
-        </div>
-    </div>
-
-    <!-- SLIDE 6 - ENCERRAMENTO -->
-    <div class="slide-wrapper">
-        <span class="slide-label">Slide 6 - Encerramento</span>
-        <div class="slide">
-            <div class="slide-overlay"></div>
-            <div class="corner-decoration top-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration top-right"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-left"><span class="corner-diamond"></span></div>
-            <div class="corner-decoration bottom-right"><span class="corner-diamond"></span></div>
-            <div class="glow-accent top"></div>
-            <div class="glow-accent bottom"></div>
-            <span class="watermark">Carol Costa</span>
-            
-            <div class="decorative-element">
-                <span class="line"></span>
-                <span class="dot"></span>
-                <span class="line"></span>
+            <div class="hero-micro reveal reveal-delay-4">
+                <span>
+                    <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    Sigilo Absoluto
+                </span>
+                <span>
+                    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    CRP 06/144014
+                </span>
             </div>
-            
-            <p class="closing-text">
-                Confie no processo.<br>
-                <em>Seu corpo sabe o caminho.</em>
-            </p>
-            
-            <div class="gold-line long" style="margin: 40px 0;"></div>
-            
-            <p class="author-name">Carol Costa</p>
-            
-            <div class="decorative-element">
-                <span class="line"></span>
-                <span class="dot"></span>
-                <span class="line"></span>
+        </div>
+    </section>
+    
+    <!-- Dores -->
+    <section class="section dores" id="dores">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <p class="section-label">Você se identifica?</p>
+                <h2 class="section-title">Talvez você esteja sentindo...</h2>
+                <p class="section-subtitle">Reconhecer o que você sente é o primeiro passo. Não precisa ser forte o tempo todo.</p>
             </div>
-            
-            <span class="slide-number">05</span>
-            <span class="copyright">© 2025 Todos os direitos reservados</span>
+            <div class="dores-grid">
+                <div class="dor-card reveal reveal-delay-1">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    </div>
+                    <h3>Medo de perder quem ama</h3>
+                    <p>Você se agarra às relações com medo do abandono, mesmo quando elas te machucam.</p>
+                </div>
+                <div class="dor-card reveal reveal-delay-2">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <h3>Cobrança excessiva</h3>
+                    <p>Sente que nunca é suficiente, que deveria dar conta de tudo e ainda sorrir.</p>
+                </div>
+                <div class="dor-card reveal reveal-delay-3">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/></svg>
+                    </div>
+                    <h3>Culpa por sentir</h3>
+                    <p>Você se culpa por estar triste, ansiosa ou cansada, como se não tivesse esse direito.</p>
+                </div>
+                <div class="dor-card reveal reveal-delay-1">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Relacionamentos desgastados</h3>
+                    <p>Conflitos constantes, comunicação ruim, sensação de não ser ouvida ou valorizada.</p>
+                </div>
+                <div class="dor-card reveal reveal-delay-2">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <h3>Perdeu sua própria referência</h3>
+                    <p>De tanto se anular pelos outros, você não sabe mais o que quer ou quem é.</p>
+                </div>
+                <div class="dor-card reveal reveal-delay-3">
+                    <div class="dor-icon">
+                        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <h3>Ansiedade constante</h3>
+                    <p>Pensamentos acelerados, preocupação excessiva, dificuldade para relaxar ou dormir.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+<!-- Benefícios -->
+<section class="section beneficios" id="beneficios">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <p class="section-label">Como eu te ajudo</p>
+            <h2 class="section-title">O que você pode conquistar</h2>
+            <p class="section-subtitle">A terapia não é sobre ser "consertada". É sobre se reconectar com quem você é e construir relações mais saudáveis.</p>
+        </div>
+        <div class="beneficios-wrapper">
+            <div class="beneficios-image reveal">
+                <img src="https://i.postimg.cc/rpdrSrC9/1767816646529-019b9a14-a46d-7a42-9277-0a6a0f23a777.jpg" alt="Psicóloga Raquel Santos em atendimento" loading="lazy">
+            </div>
+            <div class="beneficios-list">
+                <div class="beneficio-item reveal reveal-delay-1">
+                    <div class="beneficio-num">1</div>
+                    <div class="beneficio-content">
+                        <h3>Clareza emocional</h3>
+                        <p>Entender o que você sente sem julgamento, dando nome às emoções que parecem confusas.</p>
+                    </div>
+                </div>
+                <div class="beneficio-item reveal reveal-delay-2">
+                    <div class="beneficio-num">2</div>
+                    <div class="beneficio-content">
+                        <h3>Limites saudáveis</h3>
+                        <p>Aprender a dizer "não" sem culpa e proteger sua energia nas relações.</p>
+                    </div>
+                </div>
+                <div class="beneficio-item reveal reveal-delay-3">
+                    <div class="beneficio-num">3</div>
+                    <div class="beneficio-content">
+                        <h3>Autonomia emocional</h3>
+                        <p>Depender menos da validação externa e construir uma relação de confiança consigo mesma.</p>
+                    </div>
+                </div>
+                <div class="beneficio-item reveal reveal-delay-4">
+                    <div class="beneficio-num">4</div>
+                    <div class="beneficio-content">
+                        <h3>Relações mais leves</h3>
+                        <p>Comunicar suas necessidades de forma assertiva e viver conexões mais equilibradas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA FORA da div .beneficios-wrapper -->
+        <div class="section-cta reveal">
+            <a href="https://wa.me/5511920677866?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20atendimento%20psicol%C3%B3gico." class="btn btn-primary btn-animated" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Quero esse acompanhamento
+            </a>
+        </div>
+        
+    </div>
+</section>
+    
+    <!-- Sobre -->
+    <section class="section sobre" id="sobre">
+        <div class="section-container">
+            <div class="sobre-wrapper">
+                <div class="sobre-image reveal">
+                    <img src="https://i.postimg.cc/rpdrSrC9/1767816646529-019b9a14-a46d-7a42-9277-0a6a0f23a777.jpg" alt="Raquel Santos - Psicóloga Clínica" loading="lazy">
+                    <div class="sobre-badge">
+                        <span>Psicóloga Clínica</span>
+                    </div>
+                </div>
+                <div class="sobre-content">
+                    <p class="section-label reveal">Quem sou eu</p>
+                    <h2 class="section-title reveal reveal-delay-1">
+  Prazer, sou a <span class="metallic-highlight">Raquel Santos</span>
+</h2>
+                  <p class="sobre-text reveal reveal-delay-2">
+  Eu sou a <strong>Raquel Santos</strong>, Psicóloga Clínica (<strong>CRP 06/144014</strong>).
+  Já acompanhei mais de <strong>5 mil pessoas</strong> que, em algum momento, sentiram que não dava mais para seguir do mesmo jeito.
+</p>
+
+<p class="sobre-text reveal reveal-delay-3">
+  Antes da clínica, construí uma trajetória de mais de <strong>10 anos em Recursos Humanos</strong>.
+  Isso aprofundou meu olhar para o sofrimento silencioso no trabalho, as relações interpessoais e os sinais (muitas vezes invisíveis) do esgotamento emocional.
+</p>
+
+<div class="sobre-abordagem reveal reveal-delay-4">
+  <h4>Como eu trabalho</h4>
+  <p>
+    Minha abordagem integra Psicanálise, Terapia Cognitivo-Comportamental (TCC) e Psicoterapia Breve, com intervenções desde o primeiro encontro.
+    Quando indicado, utilizo avaliações e instrumentos psicológicos para compreender padrões, dores e necessidades com mais precisão.
+    Aqui, você não precisa fingir: sua dor tem escuta, nome e acolhimento.
+  </p>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+<!-- Como Funciona -->
+<section class="section como-funciona" id="como-funciona">
+    <div class="section-container">
+        <div class="section-header reveal">
+            <p class="section-label">Como funciona</p>
+            <h2 class="section-title">Simples assim para começar</h2>
+            <p class="section-subtitle">Sem burocracia. Você pode estar no conforto da sua casa, com uma xícara de café, e iniciar sua jornada de autoconhecimento.</p>
+        </div>
+        <div class="passos">
+            <div class="passo reveal reveal-delay-1">
+                <div class="passo-num">1</div>
+                <div class="passo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <h3>Conversa Inicial</h3>
+                <p>Entre em contato pelo WhatsApp ou agende uma sessão. Vamos conversar sobre suas necessidades sem compromisso.</p>
+            </div>
+            <div class="passo reveal reveal-delay-2">
+                <div class="passo-num">2</div>
+                <div class="passo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                </div>
+                <h3>Plano Personalizado</h3>
+                <p>Nas primeiras sessões, vamos entender juntas o que você está vivendo e traçar objetivos para o seu processo.</p>
+            </div>
+            <div class="passo reveal reveal-delay-3">
+                <div class="passo-num">3</div>
+                <div class="passo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <h3>Acompanhamento</h3>
+                <p>Sessões semanais online, onde você terá espaço seguro para trabalhar suas questões com suporte contínuo.</p>
+            </div>
+        </div>
+        
+        <!-- CTA FORA da div .passos -->
+        <div class="section-cta reveal">
+            <a href="#" class="btn btn-primary btn-animated" data-calendly>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                Agendar minha primeira sessão
+            </a>
+        </div>
+        
+    </div>
+</section>
+
+    <!-- Depoimentos -->
+    <section class="section depoimentos" id="depoimentos">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <p class="section-label">Depoimentos</p>
+                <h2 class="section-title">O que dizem sobre o atendimento</h2>
+                <p class="section-subtitle">Histórias reais de mulheres que encontraram no processo terapêutico um caminho de transformação.</p>
+            </div>
+        </div>
+        <div class="depoimentos-carousel" id="depoimentosCarousel">
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/NfvJ01vR/Pn5n-Cw2z-W9GJBos-YM2ah-MJSS3ns.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/mZHpRmJx/w-USx-RT20YWO0Sm8DFl0u-NNA9XYE.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/sx7Tc27f/O1q-MWi-DDD5Y8ycg-YKHQ7euie08.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/k4kjKSVF/a59O6na-NDDpak-RSCv-GOd-Un6e-DOo.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/R0ppCyvV/Oq-Rm-YJlsua-Ret-Ea-Z0HOLJ7r-GTu-A.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <!-- Duplicados para loop infinito -->
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/NfvJ01vR/Pn5n-Cw2z-W9GJBos-YM2ah-MJSS3ns.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/mZHpRmJx/w-USx-RT20YWO0Sm8DFl0u-NNA9XYE.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/sx7Tc27f/O1q-MWi-DDD5Y8ycg-YKHQ7euie08.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/k4kjKSVF/a59O6na-NDDpak-RSCv-GOd-Un6e-DOo.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+            <div class="depoimento-card">
+                <img src="https://i.postimg.cc/R0ppCyvV/Oq-Rm-YJlsua-Ret-Ea-Z0HOLJ7r-GTu-A.avif" alt="Depoimento de paciente" loading="lazy">
+            </div>
+        </div>
+    </section>
+    
+    <!-- Vídeos -->
+    <section class="section videos" id="videos">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <p class="section-label">Conteúdo</p>
+                <h2 class="section-title">Me acompanhe no Instagram</h2>
+                <p class="section-subtitle">Compartilho reflexões e conteúdos sobre saúde mental, relacionamentos e autoconhecimento.</p>
+            </div>
+            <div class="videos-grid">
+                <div class="video-item reveal reveal-delay-1">
+                    <div class="video-wrapper">
+                        <iframe src="https://player.vimeo.com/video/1152341635?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1" allow="autoplay; fullscreen; picture-in-picture" title="Vídeo sobre depressão"></iframe>
+                    </div>
+                </div>
+                <div class="video-item reveal reveal-delay-2">
+                    <div class="video-wrapper">
+                        <iframe src="https://player.vimeo.com/video/1152341657?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1" allow="autoplay; fullscreen; picture-in-picture" title="Vídeo sobre ansiedade"></iframe>
+                    </div>
+                </div>
+                <div class="video-item reveal reveal-delay-3">
+                    <div class="video-wrapper">
+                        <iframe src="https://player.vimeo.com/video/1152341680?badge=0&autopause=0&player_id=0&app_id=58479&autoplay=1&muted=1&loop=1" allow="autoplay; fullscreen; picture-in-picture" title="Vídeo sobre autoconhecimento"></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="videos-cta reveal">
+                <a href="https://instagram.com/psicologaraquels" target="_blank" rel="noopener" class="btn btn-instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    Seguir @psicologaraquels
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FAQ -->
+    <section class="section faq" id="faq">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <p class="section-label">Dúvidas Frequentes</p>
+                <h2 class="section-title">Perguntas que você pode ter</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item reveal reveal-delay-1">
+                    <div class="faq-question">
+                        <h3>Quanto tempo dura cada sessão?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Cada sessão tem duração de 50 minutos. Esse é o tempo padrão utilizado na psicoterapia, suficiente para um trabalho profundo sem causar exaustão emocional.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-2">
+                    <div class="faq-question">
+                        <h3>O atendimento é realmente online?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Sim! Todos os atendimentos são realizados online, por videochamada em plataforma segura. Você pode fazer a sessão de qualquer lugar — de casa, do trabalho, de onde se sentir confortável.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-3">
+                    <div class="faq-question">
+                        <h3>O sigilo está garantido?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Absolutamente. O sigilo profissional é garantido pelo Código de Ética do Psicólogo. Tudo o que for conversado em sessão fica entre nós. Sua privacidade é prioridade.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-1">
+                    <div class="faq-question">
+                        <h3>Qual o valor da sessão?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            O valor é conversado de forma individual. Entre em contato pelo WhatsApp que te passo todas as informações sobre investimento e formas de pagamento.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-2">
+                    <div class="faq-question">
+                        <h3>Preciso ter um "problema grave" para buscar terapia?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Não! A terapia é para qualquer pessoa que deseja se conhecer melhor, lidar com desafios emocionais ou simplesmente ter um espaço de escuta. Não existe "dor mínima" para buscar ajuda.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-3">
+                    <div class="faq-question">
+                        <h3>Como faço para agendar?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            É bem simples! Você pode me chamar no WhatsApp ou clicar em "Agendar Consulta" aqui na página. Vamos encontrar o melhor horário para você.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item reveal reveal-delay-1">
+                    <div class="faq-question">
+                        <h3>E se eu não souber o que falar na primeira sessão?</h3>
+                        <div class="faq-icon">
+                            <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Não se preocupe com isso! Você não precisa chegar "preparada". Meu papel é te ajudar a encontrar as palavras. Pode chegar como estiver — o importante é dar o primeiro passo.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CTA Final -->
+    <section class="section cta-final" id="cta-final">
+        <div class="section-container">
+            <h2 class="section-title reveal">Existe um espaço para você aqui</h2>
+            <p class="section-subtitle reveal reveal-delay-1">Você não precisa continuar carregando tudo sozinha. Dê o primeiro passo — eu estou aqui para te acompanhar.</p>
+            <div class="reveal reveal-delay-2">
+                <a href="https://wa.me/5511920677866?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20atendimento%20psicol%C3%B3gico." class="btn btn-primary" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Quero iniciar minha jornada
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="https://i.postimg.cc/nL7LFY1f/image.png" alt="Raquel Santos Psicóloga">
+                </div>
+                <div class="footer-social">
+                    <a href="https://instagram.com/psicologaraquels" target="_blank" rel="noopener" aria-label="Instagram">
+                        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                    <a href="https://wa.me/5511920677866" target="_blank" rel="noopener" aria-label="WhatsApp">
+                        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    </a>
+                </div>
+                <div class="footer-info">
+                    <p><strong>Raquel Santos</strong> — Psicóloga Clínica</p>
+                    <p>CRP 06/144014 | Atendimento Online</p>
+                </div>
+                <div class="footer-credit">
+                    Desenvolvido por <a href="https://instagram.com/opatricksimon" target="_blank" rel="noopener">Patrick Simon</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- WhatsApp Flutuante -->
+    <div class="whatsapp-float" id="whatsappFloat">
+        <a href="https://wa.me/5511920677866?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20atendimento%20psicol%C3%B3gico." target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+    </div>
+    
+    <!-- Calendly Popup -->
+    <div class="calendly-overlay" id="calendlyOverlay">
+        <div class="calendly-popup">
+            <button class="calendly-close" id="calendlyClose" aria-label="Fechar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"/>
+                    <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+            <iframe src="https://calendly.com/psicologaraquelsantos" title="Agendar consulta"></iframe>
         </div>
     </div>
-
-    <!-- SCRIPT DE EXPORTAÇÃO CORRIGIDO -->
+    
     <script>
-        // Espera tudo carregar
-        window.onload = function() {
-            console.log('Página carregada - pronto para exportar');
-        };
-
-        function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        async function exportarPDF() {
-            const btn = document.querySelector('.export-btn');
-            const progressContainer = document.getElementById('progressContainer');
-            const progressText = document.getElementById('progressText');
-            const progressFill = document.getElementById('progressFill');
+        // ================================================
+        // JAVASCRIPT
+        // ================================================
+        
+        document.addEventListener('DOMContentLoaded', function() {
             
-            // Desabilita botão e mostra progresso
-            btn.disabled = true;
-            btn.textContent = '⏳ Aguarde...';
-            progressContainer.style.display = 'block';
-            progressText.textContent = 'Preparando...';
+            // Elements
+            const header = document.getElementById('header');
+            const progressBar = document.getElementById('progressBar');
+            const menuToggle = document.getElementById('menuToggle');
+            const navMobile = document.getElementById('navMobile');
+            const navOverlay = document.getElementById('navOverlay');
+            const whatsappFloat = document.getElementById('whatsappFloat');
+            const faqItems = document.querySelectorAll('.faq-item');
+            const reveals = document.querySelectorAll('.reveal');
+            const calendlyOverlay = document.getElementById('calendlyOverlay');
+            const calendlyClose = document.getElementById('calendlyClose');
+            const calendlyTriggers = document.querySelectorAll('[data-calendly]');
             
-            // Esconde labels
-            document.querySelectorAll('.slide-label').forEach(el => {
-                el.style.display = 'none';
+            // ================================================
+            // SCROLL HANDLER
+            // ================================================
+            function handleScroll() {
+                const scrollY = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollY / docHeight) * 100;
+                
+                // Progress bar
+                progressBar.style.width = scrollPercent + '%';
+                
+                // Header scrolled state
+                if (scrollY > 80) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                
+                // WhatsApp float visibility
+                if (scrollY > 400) {
+                    whatsappFloat.classList.add('visible');
+                } else {
+                    whatsappFloat.classList.remove('visible');
+                }
+                
+                // Dynamic scroll opacity for hero overlay
+                const scrollOpacity = Math.min(scrollY / 400, 0.35);
+                document.documentElement.style.setProperty('--scrollOpacity', scrollOpacity);
+            }
+            
+            // Throttle scroll events
+            let ticking = false;
+            window.addEventListener('scroll', function() {
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        handleScroll();
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
             });
-
-            // Aguarda um pouco para garantir renderização
-            await delay(500);
-
-            // Pega todos os slides
-            const slides = document.querySelectorAll('.slide');
-            const totalSlides = slides.length;
             
-            // Cria o PDF
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({
-                orientation: 'landscape',
-                unit: 'px',
-                format: [960, 540],
-                hotfixes: ['px_scaling']
+            // Initial call
+            handleScroll();
+            
+            // ================================================
+            // MOBILE MENU
+            // ================================================
+            function toggleMenu() {
+                menuToggle.classList.toggle('active');
+                navMobile.classList.toggle('active');
+                navOverlay.classList.toggle('active');
+                document.body.style.overflow = navMobile.classList.contains('active') ? 'hidden' : '';
+            }
+            
+            menuToggle.addEventListener('click', toggleMenu);
+            navOverlay.addEventListener('click', toggleMenu);
+            
+            // Close menu on link click
+            navMobile.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (navMobile.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
             });
-
-            try {
-                for (let i = 0; i < totalSlides; i++) {
-                    // Atualiza progresso
-                    const percent = Math.round(((i + 0.5) / totalSlides) * 100);
-                    progressText.textContent = `Capturando slide ${i + 1} de ${totalSlides}...`;
-                    progressFill.style.width = percent + '%';
+            
+            // ================================================
+            // FAQ ACCORDION
+            // ================================================
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const answerInner = item.querySelector('.faq-answer-inner');
+                
+                question.addEventListener('click', function() {
+                    const isActive = item.classList.contains('active');
                     
-                    // Aguarda um pouco antes de cada captura
-                    await delay(300);
-                    
-                    // Captura o slide com configurações seguras
-                    const canvas = await html2canvas(slides[i], {
-                        scale: 2,
-                        useCORS: true,
-                        allowTaint: true,
-                        backgroundColor: '#2D0F0F',
-                        logging: false,
-                        width: 960,
-                        height: 540,
-                        onclone: function(clonedDoc) {
-                            // Garante que o clone está visível
-                            const clonedSlide = clonedDoc.querySelectorAll('.slide')[i];
-                            if (clonedSlide) {
-                                clonedSlide.style.margin = '0';
-                                clonedSlide.style.boxShadow = 'none';
-                            }
+                    // Close all others
+                    faqItems.forEach(otherItem => {
+                        if (otherItem !== item && otherItem.classList.contains('active')) {
+                            otherItem.classList.remove('active');
+                            otherItem.querySelector('.faq-answer').style.maxHeight = '0';
                         }
                     });
                     
-                    // Verifica se o canvas é válido
-                    if (canvas.width === 0 || canvas.height === 0) {
-                        throw new Error('Canvas vazio no slide ' + (i + 1));
+                    // Toggle current
+                    if (isActive) {
+                        item.classList.remove('active');
+                        answer.style.maxHeight = '0';
+                    } else {
+                        item.classList.add('active');
+                        answer.style.maxHeight = answerInner.offsetHeight + 30 + 'px';
                     }
-                    
-                    // Adiciona ao PDF
-                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                    
-                    if (i > 0) {
-                        pdf.addPage([960, 540], 'landscape');
-                    }
-                    
-                    pdf.addImage(imgData, 'JPEG', 0, 0, 960, 540);
-                    
-                    // Atualiza progresso
-                    const percentFinal = Math.round(((i + 1) / totalSlides) * 100);
-                    progressFill.style.width = percentFinal + '%';
-                }
-                
-                // Salva o PDF
-                progressText.textContent = 'Gerando arquivo...';
-                await delay(200);
-                
-                pdf.save('Carol_Costa_Constelacao_Cacau.pdf');
-                
-                // Sucesso
-                btn.textContent = '✅ PDF Salvo!';
-                progressText.textContent = 'Download concluído!';
-                progressFill.style.width = '100%';
-                
-                setTimeout(() => {
-                    btn.textContent = '📄 EXPORTAR PDF';
-                    btn.disabled = false;
-                    progressContainer.style.display = 'none';
-                    progressFill.style.width = '0%';
-                }, 3000);
-                
-            } catch (error) {
-                console.error('Erro detalhado:', error);
-                btn.textContent = '❌ Erro';
-                progressText.textContent = 'Erro: ' + error.message;
-                
-                setTimeout(() => {
-                    btn.textContent = '📄 EXPORTAR PDF';
-                    btn.disabled = false;
-                    progressContainer.style.display = 'none';
-                }, 5000);
-            }
-
-            // Mostra labels novamente
-            document.querySelectorAll('.slide-label').forEach(el => {
-                el.style.display = 'block';
+                });
             });
-        }
+            
+            // ================================================
+            // REVEAL ON SCROLL
+            // ================================================
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            reveals.forEach(reveal => {
+                revealObserver.observe(reveal);
+            });
+            
+            // ================================================
+            // CALENDLY POPUP
+            // ================================================
+            calendlyTriggers.forEach(trigger => {
+                trigger.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    calendlyOverlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            calendlyClose.addEventListener('click', function() {
+                calendlyOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            calendlyOverlay.addEventListener('click', function(e) {
+                if (e.target === calendlyOverlay) {
+                    calendlyOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // ESC key to close
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    if (calendlyOverlay.classList.contains('active')) {
+                        calendlyOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                    if (navMobile.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                }
+            });
+            
+            // ================================================
+            // SMOOTH SCROLL FOR ANCHOR LINKS
+            // ================================================
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // ================================================
+            // DEPOIMENTOS CAROUSEL - INFINITE LOOP
+            // ================================================
+            const carousel = document.getElementById('depoimentosCarousel');
+            let isHovering = false;
+            
+            carousel.addEventListener('mouseenter', () => {
+                isHovering = true;
+            });
+            
+            carousel.addEventListener('mouseleave', () => {
+                isHovering = false;
+            });
+            
+            // Reset animation when it ends to create seamless loop
+            carousel.addEventListener('animationiteration', () => {
+                // Animation loops automatically via CSS
+            });
+            
+        });
     </script>
-
 </body>
 </html>
