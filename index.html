@@ -1068,58 +1068,53 @@
             line-height: 1.6;
         }
         
-        /* ================================================
-           DEPOIMENTOS
-        ================================================ */
-        .depoimentos {
-            background: linear-gradient(180deg, var(--beige-light) 0%, var(--beige-white) 100%);
-            overflow: hidden;
-        }
-        
-        .depoimentos-carousel {
-            display: flex;
-            gap: 24px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            padding: 20px 5%;
-            animation: autoScroll 30s linear infinite;
-        }
-        
-        .depoimentos-carousel::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .depoimentos-carousel:hover {
-            animation-play-state: paused;
-        }
-        
-        @keyframes autoScroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-        
-        .depoimento-card {
-            flex-shrink: 0;
-            width: 300px;
-            scroll-snap-align: start;
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid var(--beige-mid);
-            transition: all 0.3s ease;
-        }
-        
-        .depoimento-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 40px rgba(61,90,76,0.12);
-        }
-        
-        .depoimento-card img {
-            width: 100%;
-            height: auto;
-        }
+       /* ================================================
+   DEPOIMENTOS - CARROSSEL CORRIGIDO
+================================================ */
+.depoimentos {
+  overflow: hidden; /* esse fica aqui na seção, não no carrossel */
+}
+
+.depoimentos-carousel {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0;
+  width: max-content;
+  animation: scrollDepoimentos 35s linear infinite;
+}
+
+.depoimentos-carousel:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollDepoimentos {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.depoimento-card {
+  flex-shrink: 0;
+  width: 300px;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--beige-mid);
+  transition: all 0.3s ease;
+}
+
+.depoimento-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 40px rgba(61,90,76,0.12);
+}
+
+.depoimento-card img {
+  width: 100%;
+  height: auto;
+}
         
         /* ================================================
            VÍDEOS INSTAGRAM
@@ -1910,7 +1905,7 @@
         </div>
         <div class="beneficios-wrapper">
             <div class="beneficios-image reveal">
-                <img src="https://i.postimg.cc/rpdrSrC9/1767816646529_019b9a14_a46d_7a42_9277_0a6a0f23a777.jpg" alt="Psicóloga Raquel Santos em atendimento" loading="lazy">
+                <img src="https://i.postimg.cc/NGyXnMFT/1767816065815-019b9a0b-dd83-7518-bdb2-e7d32da5f6a6.png" alt="Psicóloga Raquel Santos em atendimento" loading="lazy">
             </div>
             <div class="beneficios-list">
                 <div class="beneficio-item reveal reveal-delay-1">
@@ -1954,13 +1949,13 @@
         
     </div>
 </section>
-    
+
     <!-- Sobre -->
     <section class="section sobre" id="sobre">
         <div class="section-container">
             <div class="sobre-wrapper">
                 <div class="sobre-image reveal">
-                    <img src="https://i.postimg.cc/NGyXnMFT/1767816065815-019b9a0b-dd83-7518-bdb2-e7d32da5f6a6.png" alt="Raquel Santos - Psicóloga Clínica" loading="lazy">
+                    <img src="https://i.postimg.cc/rpdrSrC9/1767816646529-019b9a14-a46d-7a42-9277-0a6a0f23a777.jpg" alt="Raquel Santos - Psicóloga Clínica" loading="lazy">
                     <div class="sobre-badge">
                         <span>Psicóloga Clínica</span>
                     </div>
